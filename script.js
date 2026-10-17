@@ -1,0 +1,70 @@
+(() => {
+  "use strict";
+  const OWNER_WHATSAPP = "967715572404";
+  const DOWNLOAD_URL = "https://github.com/ragifi404-lang/lakwalik-website/releases/download/v1.0.0/app.release.apk";
+  const menuToggle = document.querySelector(".menu-toggle");
+  const nav = document.querySelector("#main-nav");
+  const form = document.querySelector("#contact-form");
+  const status = document.querySelector("#form-status");
+  const planSelect = form?.querySelector('[name="plan"]');
+  const toast = document.querySelector("#toast");
+
+  if (menuToggle && nav) {
+    menuToggle.addEventListener("click", () => {
+      const open = nav.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(open));
+      menuToggle.setAttribute("aria-label", open ? "إغلاق القائمة" : "فتح القائمة");
+    });
+    nav.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener("click", () => {
+      nav.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }));
+  }
+
+  // All app download controls use the direct APK release URL.
+  document.querySelectorAll('a[aria-label*="تحميل"], .footer-whatsapp[href*=".apk"]').forEach(a => {
+    a.href = DOWNLOAD_URL;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
+
+  // Preselect the plan clicked by the visitor.
+  document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
+    const requested = a.dataset.plan || "";
+    if (!planSelect) return;
+    if (requested.includes("السنوي")) planSelect.value = "Pro السنوي";
+    else if (requested.includes("مدى الحياة")) planSelect.value = "Pro مدى الحياة";
+    else if (requested.includes("الشهري")) planSelect.value = "Pro الشهري";
+    else planSelect.value = "النسخة المجانية";
+  }));
+
+  // Send form details to the owner in a prefilled WhatsApp message.
+  if (form) form.addEventListener("submit", event => {
+    event.preventDefault();
+    if (!form.reportValidity()) return;
+    const fields = new FormData(form);
+    const name = String(fields.get("name") || "").trim();
+    const contact = String(fields.get("contact") || "").trim();
+    const plan = String(fields.get("plan") || "استفسار عام");
+    let payment = "أرجو توضيح رسوم الاشتراك وطريقة الدفع المتاحة.";
+    if (plan === "Pro السنوي") payment = "أرغب بالاشتراك السنوي (3000 ريال يمني حسب السعر الموضح بالموقع). أرجو تأكيد الرسوم وإرسال طريقة الدفع.";
+    if (plan === "Pro مدى الحياة") payment = "أرغب بتفعيل Pro مدى الحياة (7000 ريال يمني حسب السعر الموضح بالموقع). أرجو تأكيد الرسوم وإرسال طريقة الدفع.";
+    if (plan === "Pro الشهري") payment = "أرغب بالاشتراك الشهري في Pro. أرجو إخباري برسوم الشهر وطريقة الدفع.";
+    if (plan === "النسخة المجانية") payment = "أرغب بالحصول على النسخة المجانية ورابط تحميلها.";
+    const message = [
+      "السلام عليكم، أرغب بالتواصل بخصوص تطبيق لك وعليك.",
+      "الاسم: " + name,
+      "وسيلة التواصل: " + contact,
+      "الخطة المطلوبة: " + plan,
+      payment,
+      "أرجو إرشادي إلى الخطوات التالية."
+    ].join("\n");
+    if (status) status.textContent = "ستفتح رسالة جاهزة في واتساب؛ راجعها ثم اضغط إرسال.";
+    window.open("https://wa.me/" + OWNER_WHATSAPP + "?text=" + encodeURIComponent(message), "_blank", "noopener,noreferrer");
+  });
+
+  document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  });
+})();
