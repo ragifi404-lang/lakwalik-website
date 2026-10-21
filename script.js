@@ -21,24 +21,20 @@
     }));
   }
 
-  // All app download controls use the direct APK release URL.
   document.querySelectorAll('a[aria-label*="تحميل"], .footer-whatsapp[href*=".apk"]').forEach(a => {
     a.href = DOWNLOAD_URL;
     a.target = "_blank";
     a.rel = "noopener noreferrer";
   });
 
-  // Preselect the plan clicked by the visitor.
   document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
     const requested = a.dataset.plan || "";
     if (!planSelect) return;
     if (requested.includes("السنوي")) planSelect.value = "Pro السنوي";
-    else if (requested.includes("مدى الحياة")) planSelect.value = "Pro مدى الحياة";
     else if (requested.includes("الشهري")) planSelect.value = "Pro الشهري";
     else planSelect.value = "النسخة المجانية";
   }));
 
-  // Send form details to the owner in a prefilled WhatsApp message.
   if (form) form.addEventListener("submit", event => {
     event.preventDefault();
     if (!form.reportValidity()) return;
@@ -47,9 +43,8 @@
     const contact = String(fields.get("contact") || "").trim();
     const plan = String(fields.get("plan") || "استفسار عام");
     let payment = "أرجو توضيح رسوم الاشتراك وطريقة الدفع المتاحة.";
-    if (plan === "Pro السنوي") payment = "أرغب بالاشتراك السنوي (3000 ريال يمني حسب السعر الموضح بالموقع). أرجو تأكيد الرسوم وإرسال طريقة الدفع.";
-    if (plan === "Pro مدى الحياة") payment = "أرغب بتفعيل Pro مدى الحياة (7000 ريال يمني حسب السعر الموضح بالموقع). أرجو تأكيد الرسوم وإرسال طريقة الدفع.";
-    if (plan === "Pro الشهري") payment = "أرغب بالاشتراك الشهري في Pro. أرجو إخباري برسوم الشهر وطريقة الدفع.";
+    if (plan === "Pro السنوي") payment = "أرغب بالاشتراك السنوي في Pro بسعر 10000 ريال يمني. أرجو تأكيد الرسوم وطريقة الدفع، مع توفر تجربة مجانية لمدة 3 أيام.";
+    if (plan === "Pro الشهري") payment = "أرغب بالاشتراك الشهري في Pro بسعر 1000 ريال يمني. أرجو تأكيد الرسوم وطريقة الدفع، مع توفر تجربة مجانية لمدة 3 أيام.";
     if (plan === "النسخة المجانية") payment = "أرغب بالحصول على النسخة المجانية ورابط تحميلها.";
     const message = [
       "السلام عليكم، أرغب بالتواصل بخصوص تطبيق لك وعليك.",
