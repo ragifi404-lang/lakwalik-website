@@ -1,7 +1,7 @@
 (() => {
   "use strict";
   const OWNER_WHATSAPP = "967715572404";
-  const DOWNLOAD_URL = "https://github.com/ragifi404-lang/lakwalik-website/releases/download/v1.0.0/app.release.apk";
+  const DOWNLOAD_URL = "https://github.com/ragifi404-lang/lakwalik-website/releases/download/v1.1.0/app-release.apk";
   const menuToggle = document.querySelector(".menu-toggle");
   const nav = document.querySelector("#main-nav");
   const form = document.querySelector("#contact-form");
@@ -30,8 +30,10 @@
   document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
     const requested = a.dataset.plan || "";
     if (!planSelect) return;
-    if (requested.includes("السنوي")) planSelect.value = "Pro السنوي";
-    else if (requested.includes("الشهري")) planSelect.value = "Pro الشهري";
+    if (requested.includes("3 أشهر")) planSelect.value = "اشتراك 3 أشهر";
+    else if (requested.includes("سنوي")) planSelect.value = "اشتراك سنوي";
+    else if (requested.includes("مدى العمر")) planSelect.value = "اشتراك مدى العمر";
+    else if (requested.includes("مجانية")) planSelect.value = "النسخة المجانية";
     else planSelect.value = "النسخة المجانية";
   }));
 
@@ -43,9 +45,12 @@
     const contact = String(fields.get("contact") || "").trim();
     const plan = String(fields.get("plan") || "استفسار عام");
     let payment = "أرجو توضيح رسوم الاشتراك وطريقة الدفع المتاحة.";
-    if (plan === "Pro السنوي") payment = "أرغب بالاشتراك السنوي في Pro بسعر 10000 ريال يمني. أرجو تأكيد الرسوم وطريقة الدفع، مع توفر تجربة مجانية لمدة 3 أيام.";
-    if (plan === "Pro الشهري") payment = "أرغب بالاشتراك الشهري في Pro بسعر 1000 ريال يمني. أرجو تأكيد الرسوم وطريقة الدفع، مع توفر تجربة مجانية لمدة 3 أيام.";
-    if (plan === "النسخة المجانية") payment = "أرغب بالحصول على النسخة المجانية ورابط تحميلها.";
+
+    if (plan === "اشتراك 3 أشهر") payment = "أرغب بالاشتراك لفترة 3 أشهر بسعر 1000 ريال يمني. أرجو تأكيد طريقة الدفع والتفعيل.";
+    if (plan === "اشتراك سنوي") payment = "أرغب بالاشتراك السنوي بسعر 4000 ريال يمني. أرجو تأكيد طريقة الدفع والتفعيل.";
+    if (plan === "اشتراك مدى العمر") payment = "أرغب بالاشتراك مدى العمر بسعر 10000 ريال يمني. أرجو تأكيد طريقة الدفع والتفعيل.";
+    if (plan === "النسخة المجانية") payment = "أرغب بالحصول على النسخة المجانية ورابط التحميل المباشر.";
+
     const message = [
       "السلام عليكم، أرغب بالتواصل بخصوص تطبيق لك وعليك.",
       "الاسم: " + name,
@@ -54,6 +59,7 @@
       payment,
       "أرجو إرشادي إلى الخطوات التالية."
     ].join("\n");
+
     if (status) status.textContent = "ستفتح رسالة جاهزة في واتساب؛ راجعها ثم اضغط إرسال.";
     window.open("https://wa.me/" + OWNER_WHATSAPP + "?text=" + encodeURIComponent(message), "_blank", "noopener,noreferrer");
   });
